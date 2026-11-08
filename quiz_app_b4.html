@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đề Cương Hóa 12 - Bài 4: Giới thiệu về Carbohydrate. Glucose và Fructose</title>
+    <!-- Sử dụng Tailwind CSS cho giao diện -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        .transition-all { transition: all 0.2s ease; }
+        
+        /* Trạng thái nút chọn Trắc nghiệm */
+        .mc-selected { background-color: #dbeafe !important; border-color: #3b82f6 !important; color: #1e40af !important; }
+        .mc-correct { background-color: #dcfce3 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .mc-incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        
+        /* Trạng thái nút chọn Đúng/Sai */
+        .tf-selected-true { background-color: #dbeafe !important; border-color: #3b82f6 !important; color: #1e40af !important; }
+        .tf-selected-false { background-color: #f3e8ff !important; border-color: #a855f7 !important; color: #6b21a8 !important; }
+        .tf-correct { background-color: #dcfce3 !important; border-color: #22c55e !important; color: #166534 !important; }
+        .tf-incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
+        
+        .disabled-opts { pointer-events: none; opacity: 0.7; }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen pb-12">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto px-4 py-4 flex justify-center items-center">
+            <h1 class="text-xl sm:text-2xl font-bold text-blue-700 text-center">Đề Cương Hóa 12: Bài 4 - Carbohydrate. Glucose và Fructose</h1>
+        </div>
+    </nav>
+
+    <main class="max-w-4xl mx-auto px-4 mt-6">
+        
+        <!-- Bảng điều khiển (Control Panel) -->
+        <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-[68px] z-40 border-b border-gray-100">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                <span class="font-semibold text-gray-700">Chế độ:</span>
+                <label class="flex items-center cursor-pointer gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
+                    <input type="radio" name="mode" value="test" class="w-4 h-4 text-blue-600" checked onchange="changeMode(this.value)">
+                    <span class="text-sm font-medium">Làm đề (Chấm điểm cuối)</span>
+                </label>
+                <label class="flex items-center cursor-pointer gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
+                    <input type="radio" name="mode" value="instant" class="w-4 h-4 text-blue-600" onchange="changeMode(this.value)">
+                    <span class="text-sm font-medium">Ôn tập (Xem đáp án ngay)</span>
+                </label>
+            </div>
+            <button onclick="manualShuffle()" class="flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium transition shadow-sm border border-indigo-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                </svg>
+                Xáo trộn đề
+            </button>
+        </div>
+
+        <!-- PHẦN I: TRẮC NGHIỆM -->
+        <div class="mb-8">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-blue-500 pb-2 inline-block">Phần I: Trắc nghiệm nhiều phương án</h2>
+            <div id="mc-container" class="space-y-6">
+                <!-- Render MC questions here -->
+            </div>
+        </div>
+
+        <!-- PHẦN II: ĐÚNG/SAI -->
+        <div class="mb-8 mt-12">
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-purple-500 pb-2 inline-block">Phần II: Trắc nghiệm Đúng/Sai</h2>
+            <div class="bg-purple-50 text-purple-800 p-4 rounded-lg mb-6 text-sm border border-purple-100">
+                Ở mỗi câu hỏi, chọn <strong>Đúng</strong> hoặc <strong>Sai</strong> cho từng ý a, b, c, d.
+            </div>
+            <div id="tf-container" class="space-y-6">
+                <!-- Render TF questions here -->
+            </div>
+        </div>
+
+        <!-- Kết quả & Hành động -->
+        <div id="action-area" class="mt-8 bg-white p-6 rounded-xl shadow-sm text-center border-t-4 border-blue-500">
+            <div id="score-display" class="hidden mb-6">
+                <h3 class="text-2xl font-bold text-gray-800 mb-4">Kết quả của bạn</h3>
+                <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-12">
+                    <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
+                        <p class="text-gray-600 font-medium">Phần I (Trắc nghiệm)</p>
+                        <p class="text-3xl font-bold text-blue-600"><span id="score-mc">0</span>/<span id="total-mc">15</span></p>
+                    </div>
+                    <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
+                        <p class="text-gray-600 font-medium">Phần II (Đúng/Sai)</p>
+                        <p class="text-3xl font-bold text-purple-600"><span id="score-tf">0</span>/<span id="total-tf">20</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <button id="btn-submit" onclick="submitTest()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition-colors text-lg">
+                Nộp Bài & Xem Điểm
+            </button>
+            
+            <button id="btn-restart" onclick="restartQuiz()" class="hidden bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition-colors text-lg mt-4 sm:mt-0 sm:ml-4">
+                Làm lại (Xáo đề)
+            </button>
+        </div>
+
+    </main>
+
+    <script>
+        // Dữ liệu Phần I (Bài 4: Carbohydrate. Glucose và Fructose)
+        const originalMCData = [
+            { question: "Carbohydrate là hợp chất hữu cơ", options: ["chứa đồng thời nhóm amino và nhóm carboxyl.", "chứa đồng thời nhóm hydroxy và nhóm carboxyl.", "tạp chức, thường công thức chung là C<sub>n</sub>(H<sub>2</sub>O)<sub>m</sub>.", "đa chức, chứa nhiều nhóm hydroxy liên tiếp."], answer: 2 },
+            { question: "Chất thuộc loại disaccharide là", options: ["glucose.", "saccharose.", "cellulose.", "fructose."], answer: 1 },
+            { question: "Chất nào sau đây thuộc loại polysaccharide?", options: ["Saccharose.", "Cellulose.", "Fructose.", "Glucose."], answer: 1 },
+            { question: "Glucose và Fructose thuộc loại carbohydrate nào sau đây?", options: ["Monosaccharide.", "Disaccharide.", "Polysaccharide.", "Oligosaccharide."], answer: 0 },
+            { question: "Công thức phân tử chung của Glucose và Fructose là", options: ["C<sub>6</sub>H<sub>10</sub>O<sub>5</sub>.", "C<sub>6</sub>H<sub>12</sub>O<sub>6</sub>.", "C<sub>5</sub>H<sub>10</sub>O<sub>5</sub>.", "C<sub>12</sub>H<sub>22</sub>O<sub>11</sub>."], answer: 1 },
+            { question: "Công thức cấu tạo dạng mạch hở của glucose là", options: ["CH<sub>2</sub>OH[CHOH]<sub>4</sub>CHO.", "CH<sub>2</sub>OH[CHOH]<sub>4</sub>CH<sub>2</sub>OH.", "CH<sub>2</sub>OH[CHOH]<sub>5</sub>CHO.", "CH<sub>2</sub>OH[CHOH]<sub>4</sub>COOH."], answer: 0 },
+            { question: "Công thức cấu tạo dạng mạch vòng của $\alpha$-glucose là (Chọn cấu tạo chuẩn có nhóm OH ở C1 hướng xuống)", options: ["Dạng $\alpha$-glucose (OH ở C1 hướng xuống)", "Dạng $\beta$-glucose (OH ở C1 hướng lên)", "Cấu tạo dạng furanose", "Cấu tạo khác"], answer: 0 },
+            { question: "Công thức cấu tạo dạng mạch vòng của fructose chủ yếu tồn tại ở dạng", options: ["Dạng pyranose", "Dạng furanose", "Dạng mạch hở", "Dạng acid"], answer: 1 },
+            { question: "Nhóm chức nào sau đây không có trong cấu tạo của glucose?", options: ["Aldehyde", "Hydroxy", "Ketone", "Hemiacetal"], answer: 2 },
+            { question: "Fructose có bao nhiêu nhóm hydroxy trong cấu tạo?", options: ["3", "4", "5", "6"], answer: 2 },
+            { question: "Glucose và Fructose không có điểm chung nào sau đây?", options: ["Dễ tan trong nước.", "Có vị ngọt.", "Chất rắn ở điều kiện thường.", "Hình thành từ quá trình quang hợp."], answer: 3 },
+            { question: "Dung dịch Glucose không có tính chất hóa học nào sau đây?", options: ["Phản ứng với Cu(OH)<sub>2</sub>", "Phản ứng với thuốc thử Tollens", "Phản ứng với nước Bromine", "Phản ứng thủy phân"], answer: 3 },
+            { question: "Chất nào sau đây có thể điều chế từ Glucose qua quá trình lên men rượu?", options: ["Ethanol", "Lactic acid", "Methane", "Fructose"], answer: 0 },
+            { question: "Trong môi trường kiềm, glucose và fructose có thể chuyển hóa lẫn nhau. Điều đó chứng tỏ hai chất này", options: ["đều phản ứng với thuốc thử Tollens", "đều là những disaccharide", "đều làm mất màu nước bromine", "đều không có nhóm hydroxy"], answer: 0 },
+            { question: "Glucose quan trọng đối với cơ thể sống vì nó", options: ["là nguồn cung cấp nước và carbon dioxide", "cung cấp năng lượng cho quá trình sinh hóa tế bào", "xúc tác cho các quá trình sinh hóa", "làm giảm quá trình oxi hóa của gốc tự do"], answer: 1 }
+        ];
+
+        // Dữ liệu Phần II
+        const originalTFData = [
+            {
+                context: "Cho các phát biểu về carbohydrate:",
+                statements: [
+                    { text: "Glucose và fructose là những đường không thể bị thủy phân.", answer: true },
+                    { text: "Fructose có cấu tạo hóa học hoàn toàn giống với glucose.", answer: false },
+                    { text: "Saccharose và maltose là những disaccharide.", answer: true },
+                    { text: "Tinh bột và cellulose là những polysaccharide.", answer: true }
+                ]
+            },
+            {
+                context: "Cho các phát biểu về tính chất chung của carbohydrate:",
+                statements: [
+                    { text: "Tất cả các loại carbohydrate đều tan hoàn toàn trong nước.", answer: false },
+                    { text: "Một số đường đơn (monosaccharide) có vị ngọt.", answer: true },
+                    { text: "Carbohydrate chỉ được tìm thấy trong thực phẩm có nguồn gốc thực vật.", answer: false },
+                    { text: "Glucose và fructose đều là chất rắn, vị ngọt, tan tốt trong nước.", answer: true }
+                ]
+            },
+            {
+                context: "Cho các phát biểu về tính chất hóa học của monosaccharide:",
+                statements: [
+                    { text: "Fructose phản ứng với thuốc thử Tollens sinh ra ammonium gluconate.", answer: true },
+                    { text: "Glucose phản ứng với Cu(OH)<sub>2</sub> trong dung dịch NaOH nóng tạo sodium gluconate.", answer: false },
+                    { text: "Glucose phản ứng với nước bromine tạo gluconic acid.", answer: true },
+                    { text: "Lên men rượu glucose sinh ra ethanol và carbon dioxide.", answer: true }
+                ]
+            },
+            {
+                context: "Tiến hành thí nghiệm phản ứng tráng bạc của glucose:<br>Bước 1: Cho khoảng 2 mL dung dịch AgNO<sub>3</sub> 1% vào ống nghiệm, thêm từ từ dung dịch ammonia 5%, lắc đều đến khi kết tủa tan hết.<br>Bước 2: Thêm vào ống nghiệm khoảng 2 mL dung dịch glucose 2%, lắc đều. Sau đó, ngâm ống nghiệm vào cốc thuỷ tinh chứa nước nóng trong vài phút.",
+                statements: [
+                    { text: "Thí nghiệm trên chứng minh glucose có tính chất của aldehyde.", answer: true },
+                    { text: "Trong thí nghiệm trên, glucose đóng vai trò là chất bị khử.", answer: false },
+                    { text: "Sau bước 2, thấy có lớp kim loại màu trắng bạc bám lên thành ống nghiệm.", answer: true },
+                    { text: "Phần trăm khối lượng của Oxygen trong sản phẩm ammonium gluconate là 52,58 (làm tròn kết quả đến phần trăm).", answer: true }
+                ]
+            },
+            {
+                context: "Tiến hành thí nghiệm phản ứng của glucose với Cu(OH)<sub>2</sub>:<br>Bước 1: Cho 5 giọt dung dịch CuSO<sub>4</sub> 0,5% vào ống nghiệm sạch.<br>Bước 2: Thêm 1 mL dung dịch NaOH 10% vào ống nghiệm, lắc đều; gạn phần dung dịch, giữ lại kết tủa.<br>Bước 3: Thêm tiếp 2 mL dung dịch glucose 1% vào ống nghiệm, lắc đều.",
+                statements: [
+                    { text: "Sau bước 3, kết tủa bị hòa tan, thu được dung dịch màu xanh lam.", answer: true },
+                    { text: "Ở bước 2, trong ống nghiệm xuất hiện kết tủa màu xanh.", answer: true },
+                    { text: "Ở bước 3 thu được 0,422 gam phức chất, thì khối lượng glucose cần phản ứng là 0,18 g (làm tròn kết quả đến phần trăm).", answer: true },
+                    { text: "Thí nghiệm trên chứng minh glucose có nhiều nhóm -OH liền kề nhau.", answer: true }
+                ]
+            }
+        ];
+
+        let currentMC = [];
+        let currentTF = [];
+        let userAnswersMC = {}; // { qIndex: optIndex }
+        let userAnswersTF = {}; // { qIndex: { stmtIndex: boolean } }
+        let currentMode = 'test';
+        let isSubmitted = false;
+
+        window.onload = () => {
+            initData();
+            renderQuiz();
+        };
+
+        function initData() {
+            currentMC = JSON.parse(JSON.stringify(originalMCData));
+            currentTF = JSON.parse(JSON.stringify(originalTFData));
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function manualShuffle() {
+            if(isSubmitted) {
+                restartQuiz();
+                return;
+            }
+            if((Object.keys(userAnswersMC).length > 0 || Object.keys(userAnswersTF).length > 0) && currentMode === 'test') {
+                if(!confirm("Bạn có chắc muốn xáo trộn? Các đáp án bạn vừa chọn sẽ bị xóa.")) return;
+            }
+            shuffleAndReset();
+        }
+
+        function shuffleAndReset() {
+            initData();
+            shuffleArray(currentMC);
+            shuffleArray(currentTF); 
+            
+            userAnswersMC = {};
+            userAnswersTF = {};
+            isSubmitted = false;
+            
+            document.getElementById('score-display').classList.add('hidden');
+            document.getElementById('btn-restart').classList.add('hidden');
+            if (currentMode === 'test') {
+                document.getElementById('btn-submit').classList.remove('hidden');
+            }
+            
+            renderQuiz();
+        }
+
+        function changeMode(mode) {
+            currentMode = mode;
+            if(Object.keys(userAnswersMC).length > 0 || Object.keys(userAnswersTF).length > 0) {
+                if(confirm("Đổi chế độ sẽ làm mới bài tập hiện tại. Tiếp tục?")) {
+                    shuffleAndReset();
+                } else {
+                    document.querySelector(`input[value="${mode === 'test' ? 'instant' : 'test'}"]`).checked = true;
+                    currentMode = mode === 'test' ? 'instant' : 'test';
+                }
+            } else {
+                shuffleAndReset();
+            }
+        }
+
+        function restartQuiz() {
+            shuffleAndReset();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderQuiz() {
+            renderMC();
+            renderTF();
+
+            const btnSubmit = document.getElementById('btn-submit');
+            if (currentMode === 'instant') {
+                btnSubmit.classList.add('hidden');
+            } else if (!isSubmitted) {
+                btnSubmit.classList.remove('hidden');
+            }
+        }
+
+        // ==========================
+        // RENDER PHẦN I (TRẮC NGHIỆM)
+        // ==========================
+        function renderMC() {
+            const container = document.getElementById('mc-container');
+            container.innerHTML = '';
+
+            currentMC.forEach((q, qIndex) => {
+                const qBlock = document.createElement('div');
+                qBlock.className = 'bg-white p-5 sm:p-6 rounded-xl shadow-sm border border-gray-100';
+                qBlock.id = `mc-block-${qIndex}`;
+                
+                const questionText = document.createElement('h3');
+                questionText.className = 'text-lg font-semibold text-gray-800 mb-4';
+                questionText.innerHTML = `<span class="text-blue-600">Câu ${qIndex + 1}:</span> ${q.question}`;
+                qBlock.appendChild(questionText);
+
+                const optionsGrid = document.createElement('div');
+                optionsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+
+                q.options.forEach((optText, optIndex) => {
+                    const btn = document.createElement('button');
+                    btn.className = `transition-all w-full text-left border-2 border-gray-200 rounded-xl p-3 cursor-pointer hover:border-blue-400 hover:bg-blue-50 text-gray-700 bg-white outline-none`;
+                    btn.id = `mc-opt-${qIndex}-${optIndex}`;
+                    btn.innerHTML = `<span class="font-bold mr-2 text-gray-500">${String.fromCharCode(65 + optIndex)}.</span> ${optText}`;
+                    
+                    btn.onclick = () => handleSelectMC(qIndex, optIndex);
+                    optionsGrid.appendChild(btn);
+                });
+                qBlock.appendChild(optionsGrid);
+                container.appendChild(qBlock);
+            });
+        }
+
+        function handleSelectMC(qIndex, optIndex) {
+            if (isSubmitted) return;
+            if (currentMode === 'instant' && userAnswersMC[qIndex] !== undefined) return;
+
+            userAnswersMC[qIndex] = optIndex;
+            const qBlock = document.getElementById(`mc-block-${qIndex}`);
+            const questionData = currentMC[qIndex];
+            
+            const optionsDiv = qBlock.querySelector('.grid');
+            const allOptBtns = optionsDiv.querySelectorAll('button');
+
+            if (currentMode === 'test') {
+                allOptBtns.forEach(b => {
+                    b.classList.remove('mc-selected', 'border-blue-500', 'bg-blue-50');
+                    b.classList.add('border-gray-200');
+                });
+                const selectedBtn = document.getElementById(`mc-opt-${qIndex}-${optIndex}`);
+                selectedBtn.classList.add('mc-selected');
+            } 
+            else if (currentMode === 'instant') {
+                optionsDiv.classList.add('disabled-opts');
+                const isCorrect = (optIndex === questionData.answer);
+                const selectedBtn = document.getElementById(`mc-opt-${qIndex}-${optIndex}`);
+                const correctBtn = document.getElementById(`mc-opt-${qIndex}-${questionData.answer}`);
+
+                if (isCorrect) {
+                    selectedBtn.classList.add('mc-correct');
+                } else {
+                    selectedBtn.classList.add('mc-incorrect');
+                    correctBtn.classList.add('mc-correct');
+                }
+            }
+        }
+
+        // ==========================
+        // RENDER PHẦN II (ĐÚNG/SAI)
+        // ==========================
+        function renderTF() {
+            const container = document.getElementById('tf-container');
+            container.innerHTML = '';
+
+            currentTF.forEach((q, qIndex) => {
+                const qBlock = document.createElement('div');
+                qBlock.className = 'bg-white p-5 sm:p-6 rounded-xl shadow-sm border border-gray-100';
+                qBlock.id = `tf-block-${qIndex}`;
+                
+                if (q.context) {
+                    const questionHeader = document.createElement('h3');
+                    questionHeader.className = 'text-lg font-semibold text-gray-800 mb-2';
+                    questionHeader.innerHTML = `<span class="text-purple-600">Câu ${qIndex + 1}:</span> ${q.context}`;
+                    qBlock.appendChild(questionHeader);
+                } else {
+                    const questionHeader = document.createElement('h3');
+                    questionHeader.className = 'text-lg font-semibold text-gray-800 mb-2';
+                    questionHeader.innerHTML = `<span class="text-purple-600">Câu ${qIndex + 1}:</span>`;
+                    qBlock.appendChild(questionHeader);
+                }
+
+                const statementsContainer = document.createElement('div');
+                statementsContainer.className = 'mt-4 space-y-3';
+
+                q.statements.forEach((stmt, stmtIndex) => {
+                    const stmtRow = document.createElement('div');
+                    stmtRow.className = 'flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border border-gray-100 bg-gray-50 gap-4';
+                    stmtRow.id = `tf-row-${qIndex}-${stmtIndex}`;
+                    
+                    const stmtText = document.createElement('div');
+                    stmtText.className = 'flex-1 text-gray-700';
+                    stmtText.innerHTML = `<span class="font-bold mr-2 text-gray-500">${String.fromCharCode(97 + stmtIndex)})</span> ${stmt.text}`;
+                    
+                    const btnsDiv = document.createElement('div');
+                    btnsDiv.className = 'flex gap-2 sm:shrink-0';
+                    
+                    const btnTrue = document.createElement('button');
+                    btnTrue.className = 'transition-all px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:border-blue-400 bg-white outline-none min-w-[70px]';
+                    btnTrue.innerText = 'Đúng';
+                    btnTrue.id = `tf-btn-${qIndex}-${stmtIndex}-true`;
+                    btnTrue.onclick = () => handleSelectTF(qIndex, stmtIndex, true);
+
+                    const btnFalse = document.createElement('button');
+                    btnFalse.className = 'transition-all px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:border-purple-400 bg-white outline-none min-w-[70px]';
+                    btnFalse.innerText = 'Sai';
+                    btnFalse.id = `tf-btn-${qIndex}-${stmtIndex}-false`;
+                    btnFalse.onclick = () => handleSelectTF(qIndex, stmtIndex, false);
+
+                    btnsDiv.appendChild(btnTrue);
+                    btnsDiv.appendChild(btnFalse);
+
+                    stmtRow.appendChild(stmtText);
+                    stmtRow.appendChild(btnsDiv);
+                    statementsContainer.appendChild(stmtRow);
+                });
+                
+                qBlock.appendChild(statementsContainer);
+                container.appendChild(qBlock);
+            });
+        }
+
+        function handleSelectTF(qIndex, stmtIndex, value) {
+            if (isSubmitted) return;
+            if (!userAnswersTF[qIndex]) userAnswersTF[qIndex] = {};
+            if (currentMode === 'instant' && userAnswersTF[qIndex][stmtIndex] !== undefined) return;
+
+            userAnswersTF[qIndex][stmtIndex] = value;
+            
+            const btnTrue = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-true`);
+            const btnFalse = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-false`);
+            const stmtRow = document.getElementById(`tf-row-${qIndex}-${stmtIndex}`);
+            const correctValue = currentTF[qIndex].statements[stmtIndex].answer;
+
+            if (currentMode === 'test') {
+                btnTrue.className = 'transition-all px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:border-blue-400 bg-white outline-none min-w-[70px]';
+                btnFalse.className = 'transition-all px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:border-purple-400 bg-white outline-none min-w-[70px]';
+                
+                if (value === true) {
+                    btnTrue.classList.add('tf-selected-true');
+                    btnTrue.classList.remove('border-gray-200');
+                } else {
+                    btnFalse.classList.add('tf-selected-false');
+                    btnFalse.classList.remove('border-gray-200');
+                }
+            } 
+            else if (currentMode === 'instant') {
+                const btnsDiv = btnTrue.parentElement;
+                btnsDiv.classList.add('disabled-opts');
+
+                const selectedBtn = value ? btnTrue : btnFalse;
+                const correctBtn = correctValue ? btnTrue : btnFalse;
+
+                if (value === correctValue) {
+                    selectedBtn.classList.add('tf-correct');
+                    selectedBtn.classList.remove('border-gray-200', 'text-gray-600');
+                } else {
+                    selectedBtn.classList.add('tf-incorrect');
+                    selectedBtn.classList.remove('border-gray-200', 'text-gray-600');
+                    
+                    correctBtn.classList.add('tf-correct');
+                    correctBtn.classList.remove('border-gray-200', 'text-gray-600');
+                }
+            }
+        }
+
+        // ==========================
+        // CHẤM ĐIỂM
+        // ==========================
+        function submitTest() {
+            let totalMCAnswered = Object.keys(userAnswersMC).length;
+            let totalTFAnswered = 0;
+            let totalTFTarget = 0;
+            
+            currentTF.forEach(q => totalTFTarget += q.statements.length);
+            for(let q in userAnswersTF) {
+                totalTFAnswered += Object.keys(userAnswersTF[q]).length;
+            }
+
+            if (totalMCAnswered < currentMC.length || totalTFAnswered < totalTFTarget) {
+                if(!confirm("Bạn chưa hoàn thành tất cả câu hỏi. Vẫn muốn nộp bài?")) return;
+            }
+
+            isSubmitted = true;
+            let scoreMC = 0;
+            let scoreTF = 0;
+
+            // Chấm MC
+            currentMC.forEach((q, qIndex) => {
+                const userOpt = userAnswersMC[qIndex];
+                const qBlock = document.getElementById(`mc-block-${qIndex}`);
+                qBlock.querySelector('.grid').classList.add('disabled-opts');
+                
+                const correctBtn = document.getElementById(`mc-opt-${qIndex}-${q.answer}`);
+                
+                if (userOpt === q.answer) {
+                    scoreMC++;
+                    correctBtn.classList.add('mc-correct');
+                } else {
+                    if (userOpt !== undefined) {
+                        const wrongBtn = document.getElementById(`mc-opt-${qIndex}-${userOpt}`);
+                        wrongBtn.classList.add('mc-incorrect');
+                        wrongBtn.classList.remove('mc-selected');
+                    }
+                    correctBtn.classList.add('mc-correct'); 
+                }
+            });
+
+            // Chấm TF
+            currentTF.forEach((q, qIndex) => {
+                q.statements.forEach((stmt, stmtIndex) => {
+                    const userVal = userAnswersTF[qIndex] ? userAnswersTF[qIndex][stmtIndex] : undefined;
+                    const correctVal = stmt.answer;
+                    
+                    const btnTrue = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-true`);
+                    const btnFalse = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-false`);
+                    btnTrue.parentElement.classList.add('disabled-opts');
+
+                    const correctBtn = correctVal ? btnTrue : btnFalse;
+                    
+                    if (userVal === correctVal) {
+                        scoreTF++;
+                        correctBtn.classList.add('tf-correct');
+                        correctBtn.classList.remove('tf-selected-true', 'tf-selected-false', 'border-gray-200');
+                    } else {
+                        if (userVal !== undefined) {
+                            const wrongBtn = userVal ? btnTrue : btnFalse;
+                            wrongBtn.classList.add('tf-incorrect');
+                            wrongBtn.classList.remove('tf-selected-true', 'tf-selected-false', 'border-gray-200');
+                        }
+                        correctBtn.classList.add('tf-correct');
+                        correctBtn.classList.remove('border-gray-200');
+                    }
+                });
+            });
+
+            document.getElementById('btn-submit').classList.add('hidden');
+            const scoreDisplay = document.getElementById('score-display');
+            document.getElementById('score-mc').innerText = scoreMC;
+            document.getElementById('total-mc').innerText = currentMC.length;
+            document.getElementById('score-tf').innerText = scoreTF;
+            document.getElementById('total-tf').innerText = totalTFTarget;
+            
+            scoreDisplay.classList.add('hidden');
+            document.getElementById('score-display').classList.remove('hidden');
+            document.getElementById('btn-restart').classList.remove('hidden');
+
+            document.getElementById('action-area').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
