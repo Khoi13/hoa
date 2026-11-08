@@ -8,21 +8,63 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
-        .transition-all { transition: all 0.2s ease; }
-        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3f4f6;
+        }
+
+        .transition-all {
+            transition: all 0.2s ease;
+        }
+
         /* Trạng thái nút chọn Trắc nghiệm */
-        .mc-selected { background-color: #dbeafe !important; border-color: #3b82f6 !important; color: #1e40af !important; }
-        .mc-correct { background-color: #dcfce3 !important; border-color: #22c55e !important; color: #166534 !important; }
-        .mc-incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
-        
+        .mc-selected {
+            background-color: #dbeafe !important;
+            border-color: #3b82f6 !important;
+            color: #1e40af !important;
+        }
+
+        .mc-correct {
+            background-color: #dcfce3 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+        }
+
+        .mc-incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
         /* Trạng thái nút chọn Đúng/Sai */
-        .tf-selected-true { background-color: #dbeafe !important; border-color: #3b82f6 !important; color: #1e40af !important; }
-        .tf-selected-false { background-color: #f3e8ff !important; border-color: #a855f7 !important; color: #6b21a8 !important; }
-        .tf-correct { background-color: #dcfce3 !important; border-color: #22c55e !important; color: #166534 !important; }
-        .tf-incorrect { background-color: #fee2e2 !important; border-color: #ef4444 !important; color: #991b1b !important; }
-        
-        .disabled-opts { pointer-events: none; opacity: 0.7; }
+        .tf-selected-true {
+            background-color: #dbeafe !important;
+            border-color: #3b82f6 !important;
+            color: #1e40af !important;
+        }
+
+        .tf-selected-false {
+            background-color: #f3e8ff !important;
+            border-color: #a855f7 !important;
+            color: #6b21a8 !important;
+        }
+
+        .tf-correct {
+            background-color: #dcfce3 !important;
+            border-color: #22c55e !important;
+            color: #166534 !important;
+        }
+
+        .tf-incorrect {
+            background-color: #fee2e2 !important;
+            border-color: #ef4444 !important;
+            color: #991b1b !important;
+        }
+
+        .disabled-opts {
+            pointer-events: none;
+            opacity: 0.7;
+        }
     </style>
 </head>
 <body class="text-gray-800 antialiased min-h-screen pb-12">
@@ -30,28 +72,37 @@
     <!-- Navbar -->
     <nav class="bg-white shadow-sm sticky top-0 z-50">
         <div class="max-w-4xl mx-auto px-4 py-4 flex justify-center items-center">
-            <h1 class="text-xl sm:text-2xl font-bold text-blue-700 text-center">Đề Cương Hóa 12: Bài 4 - Carbohydrate. Glucose và Fructose</h1>
+            <h1 class="text-xl sm:text-2xl font-bold text-blue-700 text-center">Đề Cương Hóa 12: Bài 4 - Carbohydrate.
+                Glucose và Fructose</h1>
         </div>
     </nav>
 
     <main class="max-w-4xl mx-auto px-4 mt-6">
-        
+
         <!-- Bảng điều khiển (Control Panel) -->
-        <div class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-[68px] z-40 border-b border-gray-100">
+        <div
+            class="bg-white rounded-xl shadow-sm p-4 sm:p-6 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 sticky top-[68px] z-40 border-b border-gray-100">
             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
                 <span class="font-semibold text-gray-700">Chế độ:</span>
-                <label class="flex items-center cursor-pointer gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
-                    <input type="radio" name="mode" value="test" class="w-4 h-4 text-blue-600" checked onchange="changeMode(this.value)">
+                <label
+                    class="flex items-center cursor-pointer gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
+                    <input type="radio" name="mode" value="test" class="w-4 h-4 text-blue-600" checked
+                        onchange="changeMode(this.value)">
                     <span class="text-sm font-medium">Làm đề (Chấm điểm cuối)</span>
                 </label>
-                <label class="flex items-center cursor-pointer gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
-                    <input type="radio" name="mode" value="instant" class="w-4 h-4 text-blue-600" onchange="changeMode(this.value)">
+                <label
+                    class="flex items-center cursor-pointer gap-2 bg-gray-50 px-3 py-2 rounded-lg border border-gray-200">
+                    <input type="radio" name="mode" value="instant" class="w-4 h-4 text-blue-600"
+                        onchange="changeMode(this.value)">
                     <span class="text-sm font-medium">Ôn tập (Xem đáp án ngay)</span>
                 </label>
             </div>
-            <button onclick="manualShuffle()" class="flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium transition shadow-sm border border-indigo-200">
+            <button onclick="manualShuffle()"
+                class="flex items-center justify-center gap-2 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 px-4 py-2 rounded-lg font-medium transition shadow-sm border border-indigo-200">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd" />
+                    <path fill-rule="evenodd"
+                        d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 010 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z"
+                        clip-rule="evenodd" />
                 </svg>
                 Xáo trộn đề
             </button>
@@ -59,7 +110,8 @@
 
         <!-- PHẦN I: TRẮC NGHIỆM -->
         <div class="mb-8">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-blue-500 pb-2 inline-block">Phần I: Trắc nghiệm nhiều phương án</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-blue-500 pb-2 inline-block">Phần I: Trắc
+                nghiệm nhiều phương án</h2>
             <div id="mc-container" class="space-y-6">
                 <!-- Render MC questions here -->
             </div>
@@ -67,7 +119,8 @@
 
         <!-- PHẦN II: ĐÚNG/SAI -->
         <div class="mb-8 mt-12">
-            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-purple-500 pb-2 inline-block">Phần II: Trắc nghiệm Đúng/Sai</h2>
+            <h2 class="text-2xl font-bold text-gray-800 mb-6 border-b-2 border-purple-500 pb-2 inline-block">Phần II:
+                Trắc nghiệm Đúng/Sai</h2>
             <div class="bg-purple-50 text-purple-800 p-4 rounded-lg mb-6 text-sm border border-purple-100">
                 Ở mỗi câu hỏi, chọn <strong>Đúng</strong> hoặc <strong>Sai</strong> cho từng ý a, b, c, d.
             </div>
@@ -83,20 +136,24 @@
                 <div class="flex flex-col sm:flex-row justify-center gap-4 sm:gap-12">
                     <div class="bg-blue-50 p-4 rounded-xl border border-blue-100">
                         <p class="text-gray-600 font-medium">Phần I (Trắc nghiệm)</p>
-                        <p class="text-3xl font-bold text-blue-600"><span id="score-mc">0</span>/<span id="total-mc">15</span></p>
+                        <p class="text-3xl font-bold text-blue-600"><span id="score-mc">0</span>/<span
+                                id="total-mc">15</span></p>
                     </div>
                     <div class="bg-purple-50 p-4 rounded-xl border border-purple-100">
                         <p class="text-gray-600 font-medium">Phần II (Đúng/Sai)</p>
-                        <p class="text-3xl font-bold text-purple-600"><span id="score-tf">0</span>/<span id="total-tf">20</span></p>
+                        <p class="text-3xl font-bold text-purple-600"><span id="score-tf">0</span>/<span
+                                id="total-tf">20</span></p>
                     </div>
                 </div>
             </div>
-            
-            <button id="btn-submit" onclick="submitTest()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition-colors text-lg">
+
+            <button id="btn-submit" onclick="submitTest()"
+                class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition-colors text-lg">
                 Nộp Bài & Xem Điểm
             </button>
-            
-            <button id="btn-restart" onclick="restartQuiz()" class="hidden bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition-colors text-lg mt-4 sm:mt-0 sm:ml-4">
+
+            <button id="btn-restart" onclick="restartQuiz()"
+                class="hidden bg-gray-800 hover:bg-gray-900 text-white font-semibold py-3 px-8 rounded-xl shadow-md transition-colors text-lg mt-4 sm:mt-0 sm:ml-4">
                 Làm lại (Xáo đề)
             </button>
         </div>
@@ -147,7 +204,7 @@
                 context: "Cho các phát biểu về tính chất hóa học của monosaccharide:",
                 statements: [
                     { text: "Fructose phản ứng với thuốc thử Tollens sinh ra ammonium gluconate.", answer: true },
-                    { text: "Glucose phản ứng với Cu(OH)<sub>2</sub> trong dung dịch NaOH nóng tạo sodium gluconate.", answer: false },
+                    { text: "Glucose phản ứng với Cu(OH)<sub>2</sub> trong dung dịch NaOH nóng tạo sodium gluconate.", answer: true },
                     { text: "Glucose phản ứng với nước bromine tạo gluconic acid.", answer: true },
                     { text: "Lên men rượu glucose sinh ra ethanol và carbon dioxide.", answer: true }
                 ]
@@ -165,7 +222,7 @@
                 context: "Tiến hành thí nghiệm phản ứng của glucose với Cu(OH)<sub>2</sub>:<br>Bước 1: Cho 5 giọt dung dịch CuSO<sub>4</sub> 0,5% vào ống nghiệm sạch.<br>Bước 2: Thêm 1 mL dung dịch NaOH 10% vào ống nghiệm, lắc đều; gạn phần dung dịch, giữ lại kết tủa.<br>Bước 3: Thêm tiếp 2 mL dung dịch glucose 1% vào ống nghiệm, lắc đều.",
                 statements: [
                     { text: "Sau bước 3, kết tủa bị hòa tan, thu được dung dịch màu xanh lam.", answer: true },
-                    { text: "Ở bước 2, trong ống nghiệm xuất hiện kết tủa màu xanh.", answer: true },
+                    { text: "Ở bước 2, trong ống nghiệm xuất hiện kết tủa màu xanh.", answer: false },
                     { text: "Ở bước 3 thu được 0,422 gam phức chất, thì khối lượng glucose cần phản ứng là 0,18 g (làm tròn kết quả đến phần trăm).", answer: true },
                     { text: "Thí nghiệm trên chứng minh glucose có nhiều nhóm -OH liền kề nhau.", answer: true }
                 ]
@@ -197,12 +254,12 @@
         }
 
         function manualShuffle() {
-            if(isSubmitted) {
+            if (isSubmitted) {
                 restartQuiz();
                 return;
             }
-            if((Object.keys(userAnswersMC).length > 0 || Object.keys(userAnswersTF).length > 0) && currentMode === 'test') {
-                if(!confirm("Bạn có chắc muốn xáo trộn? Các đáp án bạn vừa chọn sẽ bị xóa.")) return;
+            if ((Object.keys(userAnswersMC).length > 0 || Object.keys(userAnswersTF).length > 0) && currentMode === 'test') {
+                if (!confirm("Bạn có chắc muốn xáo trộn? Các đáp án bạn vừa chọn sẽ bị xóa.")) return;
             }
             shuffleAndReset();
         }
@@ -210,25 +267,25 @@
         function shuffleAndReset() {
             initData();
             shuffleArray(currentMC);
-            shuffleArray(currentTF); 
-            
+            shuffleArray(currentTF);
+
             userAnswersMC = {};
             userAnswersTF = {};
             isSubmitted = false;
-            
+
             document.getElementById('score-display').classList.add('hidden');
             document.getElementById('btn-restart').classList.add('hidden');
             if (currentMode === 'test') {
                 document.getElementById('btn-submit').classList.remove('hidden');
             }
-            
+
             renderQuiz();
         }
 
         function changeMode(mode) {
             currentMode = mode;
-            if(Object.keys(userAnswersMC).length > 0 || Object.keys(userAnswersTF).length > 0) {
-                if(confirm("Đổi chế độ sẽ làm mới bài tập hiện tại. Tiếp tục?")) {
+            if (Object.keys(userAnswersMC).length > 0 || Object.keys(userAnswersTF).length > 0) {
+                if (confirm("Đổi chế độ sẽ làm mới bài tập hiện tại. Tiếp tục?")) {
                     shuffleAndReset();
                 } else {
                     document.querySelector(`input[value="${mode === 'test' ? 'instant' : 'test'}"]`).checked = true;
@@ -267,7 +324,7 @@
                 const qBlock = document.createElement('div');
                 qBlock.className = 'bg-white p-5 sm:p-6 rounded-xl shadow-sm border border-gray-100';
                 qBlock.id = `mc-block-${qIndex}`;
-                
+
                 const questionText = document.createElement('h3');
                 questionText.className = 'text-lg font-semibold text-gray-800 mb-4';
                 questionText.innerHTML = `<span class="text-blue-600">Câu ${qIndex + 1}:</span> ${q.question}`;
@@ -281,7 +338,7 @@
                     btn.className = `transition-all w-full text-left border-2 border-gray-200 rounded-xl p-3 cursor-pointer hover:border-blue-400 hover:bg-blue-50 text-gray-700 bg-white outline-none`;
                     btn.id = `mc-opt-${qIndex}-${optIndex}`;
                     btn.innerHTML = `<span class="font-bold mr-2 text-gray-500">${String.fromCharCode(65 + optIndex)}.</span> ${optText}`;
-                    
+
                     btn.onclick = () => handleSelectMC(qIndex, optIndex);
                     optionsGrid.appendChild(btn);
                 });
@@ -297,7 +354,7 @@
             userAnswersMC[qIndex] = optIndex;
             const qBlock = document.getElementById(`mc-block-${qIndex}`);
             const questionData = currentMC[qIndex];
-            
+
             const optionsDiv = qBlock.querySelector('.grid');
             const allOptBtns = optionsDiv.querySelectorAll('button');
 
@@ -308,7 +365,7 @@
                 });
                 const selectedBtn = document.getElementById(`mc-opt-${qIndex}-${optIndex}`);
                 selectedBtn.classList.add('mc-selected');
-            } 
+            }
             else if (currentMode === 'instant') {
                 optionsDiv.classList.add('disabled-opts');
                 const isCorrect = (optIndex === questionData.answer);
@@ -335,7 +392,7 @@
                 const qBlock = document.createElement('div');
                 qBlock.className = 'bg-white p-5 sm:p-6 rounded-xl shadow-sm border border-gray-100';
                 qBlock.id = `tf-block-${qIndex}`;
-                
+
                 if (q.context) {
                     const questionHeader = document.createElement('h3');
                     questionHeader.className = 'text-lg font-semibold text-gray-800 mb-2';
@@ -355,14 +412,14 @@
                     const stmtRow = document.createElement('div');
                     stmtRow.className = 'flex flex-col sm:flex-row sm:items-center justify-between p-3 rounded-lg border border-gray-100 bg-gray-50 gap-4';
                     stmtRow.id = `tf-row-${qIndex}-${stmtIndex}`;
-                    
+
                     const stmtText = document.createElement('div');
                     stmtText.className = 'flex-1 text-gray-700';
                     stmtText.innerHTML = `<span class="font-bold mr-2 text-gray-500">${String.fromCharCode(97 + stmtIndex)})</span> ${stmt.text}`;
-                    
+
                     const btnsDiv = document.createElement('div');
                     btnsDiv.className = 'flex gap-2 sm:shrink-0';
-                    
+
                     const btnTrue = document.createElement('button');
                     btnTrue.className = 'transition-all px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:border-blue-400 bg-white outline-none min-w-[70px]';
                     btnTrue.innerText = 'Đúng';
@@ -382,7 +439,7 @@
                     stmtRow.appendChild(btnsDiv);
                     statementsContainer.appendChild(stmtRow);
                 });
-                
+
                 qBlock.appendChild(statementsContainer);
                 container.appendChild(qBlock);
             });
@@ -394,7 +451,7 @@
             if (currentMode === 'instant' && userAnswersTF[qIndex][stmtIndex] !== undefined) return;
 
             userAnswersTF[qIndex][stmtIndex] = value;
-            
+
             const btnTrue = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-true`);
             const btnFalse = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-false`);
             const stmtRow = document.getElementById(`tf-row-${qIndex}-${stmtIndex}`);
@@ -403,7 +460,7 @@
             if (currentMode === 'test') {
                 btnTrue.className = 'transition-all px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:border-blue-400 bg-white outline-none min-w-[70px]';
                 btnFalse.className = 'transition-all px-4 py-2 border-2 border-gray-200 rounded-lg text-sm font-semibold text-gray-600 hover:border-purple-400 bg-white outline-none min-w-[70px]';
-                
+
                 if (value === true) {
                     btnTrue.classList.add('tf-selected-true');
                     btnTrue.classList.remove('border-gray-200');
@@ -411,7 +468,7 @@
                     btnFalse.classList.add('tf-selected-false');
                     btnFalse.classList.remove('border-gray-200');
                 }
-            } 
+            }
             else if (currentMode === 'instant') {
                 const btnsDiv = btnTrue.parentElement;
                 btnsDiv.classList.add('disabled-opts');
@@ -425,7 +482,7 @@
                 } else {
                     selectedBtn.classList.add('tf-incorrect');
                     selectedBtn.classList.remove('border-gray-200', 'text-gray-600');
-                    
+
                     correctBtn.classList.add('tf-correct');
                     correctBtn.classList.remove('border-gray-200', 'text-gray-600');
                 }
@@ -439,14 +496,14 @@
             let totalMCAnswered = Object.keys(userAnswersMC).length;
             let totalTFAnswered = 0;
             let totalTFTarget = 0;
-            
+
             currentTF.forEach(q => totalTFTarget += q.statements.length);
-            for(let q in userAnswersTF) {
+            for (let q in userAnswersTF) {
                 totalTFAnswered += Object.keys(userAnswersTF[q]).length;
             }
 
             if (totalMCAnswered < currentMC.length || totalTFAnswered < totalTFTarget) {
-                if(!confirm("Bạn chưa hoàn thành tất cả câu hỏi. Vẫn muốn nộp bài?")) return;
+                if (!confirm("Bạn chưa hoàn thành tất cả câu hỏi. Vẫn muốn nộp bài?")) return;
             }
 
             isSubmitted = true;
@@ -458,9 +515,9 @@
                 const userOpt = userAnswersMC[qIndex];
                 const qBlock = document.getElementById(`mc-block-${qIndex}`);
                 qBlock.querySelector('.grid').classList.add('disabled-opts');
-                
+
                 const correctBtn = document.getElementById(`mc-opt-${qIndex}-${q.answer}`);
-                
+
                 if (userOpt === q.answer) {
                     scoreMC++;
                     correctBtn.classList.add('mc-correct');
@@ -470,7 +527,7 @@
                         wrongBtn.classList.add('mc-incorrect');
                         wrongBtn.classList.remove('mc-selected');
                     }
-                    correctBtn.classList.add('mc-correct'); 
+                    correctBtn.classList.add('mc-correct');
                 }
             });
 
@@ -479,13 +536,13 @@
                 q.statements.forEach((stmt, stmtIndex) => {
                     const userVal = userAnswersTF[qIndex] ? userAnswersTF[qIndex][stmtIndex] : undefined;
                     const correctVal = stmt.answer;
-                    
+
                     const btnTrue = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-true`);
                     const btnFalse = document.getElementById(`tf-btn-${qIndex}-${stmtIndex}-false`);
                     btnTrue.parentElement.classList.add('disabled-opts');
 
                     const correctBtn = correctVal ? btnTrue : btnFalse;
-                    
+
                     if (userVal === correctVal) {
                         scoreTF++;
                         correctBtn.classList.add('tf-correct');
@@ -508,7 +565,7 @@
             document.getElementById('total-mc').innerText = currentMC.length;
             document.getElementById('score-tf').innerText = scoreTF;
             document.getElementById('total-tf').innerText = totalTFTarget;
-            
+
             scoreDisplay.classList.add('hidden');
             document.getElementById('score-display').classList.remove('hidden');
             document.getElementById('btn-restart').classList.remove('hidden');
